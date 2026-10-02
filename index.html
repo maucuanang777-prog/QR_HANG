@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tra cứu sản phẩm</title>
+<style>
+  body{font-family:Arial,sans-serif;max-width:480px;margin:30px auto;padding:16px;text-align:center;background:#fafafa}
+  img{max-width:100%;border-radius:12px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+  h1{font-size:22px;margin:8px 0}
+  .spec{white-space:pre-wrap;text-align:left;background:#fff;padding:14px;border-radius:8px;margin-top:10px;border:1px solid #ddd;font-size:15px;line-height:1.5}
+  .muted{color:#888;margin-top:20px}
+</style>
+</head>
+<body>
+<div id="content">Đang tải...</div>
+<script>
+const params = new URLSearchParams(window.location.search);
+const id = params.get('id');
+fetch('products.json?t=' + Date.now())
+  .then(r => r.json())
+  .then(data => {
+    const p = data.find(x => x.id === id);
+    const el = document.getElementById('content');
+    if (!p) { el.innerHTML = '<p>Không tìm thấy sản phẩm (mã: ' + (id || 'trống') + ')</p>'; return; }
+    el.innerHTML =
+      '<img src="' + p.image + '" alt="' + p.name + '">' +
+      '<h1>' + p.name + '</h1>' +
+      '<div class="spec">' + p.spec + '</div>' +
+      '<div class="muted">Mã: ' + p.id + '</div>';
+  })
+  .catch(() => {
+    document.getElementById('content').innerHTML = '<p>Lỗi tải dữ liệu, thử lại sau.</p>';
+  });
+</script>
+</body>
+</html>
